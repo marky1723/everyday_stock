@@ -2,18 +2,18 @@ name: 매일 주식 대시보드 업데이트
 
 on:
   schedule:
-    - cron: '0 1 * * 1-5'   # 매주 월~금 오전 10시 (한국시간 = UTC+9, 즉 UTC 01:00)
-  workflow_dispatch:          # 수동으로도 실행 가능
+    - cron: '0 1 * * 1-5'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: 코드 가져오기
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Python 설치
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -30,3 +30,4 @@ jobs:
           git add docs/index.html
           git commit -m "자동 업데이트: $(date '+%Y-%m-%d')" || echo "변경사항 없음"
           git push
+
