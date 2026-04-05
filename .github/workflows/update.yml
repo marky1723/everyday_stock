@@ -1,0 +1,32 @@
+name: 매일 주식 대시보드 업데이트
+
+on:
+  schedule:
+    - cron: '0 1 * * 1-5'   # 매주 월~금 오전 10시 (한국시간 = UTC+9, 즉 UTC 01:00)
+  workflow_dispatch:          # 수동으로도 실행 가능
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 코드 가져오기
+        uses: actions/checkout@v3
+
+      - name: Python 설치
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: 라이브러리 설치
+        run: pip install -r requirements.txt
+
+      - name: 스크립트 실행 (HTML 생성)
+        run: python stock_scraper.py
+
+      - name: 변경된 HTML 자동 저장
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add docs/index.html
+          git commit -m "자동 업데이트: $(date '+%Y-%m-%d')" || echo "변경사항 없음"
+          git push
