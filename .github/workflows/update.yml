@@ -5,6 +5,9 @@ on:
     - cron: '0 1 * * 1-5'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -30,4 +33,3 @@ jobs:
           git add docs/index.html
           git commit -m "자동 업데이트: $(date '+%Y-%m-%d')" || echo "변경사항 없음"
           git push
-
