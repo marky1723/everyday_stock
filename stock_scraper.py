@@ -25,7 +25,6 @@ weekday_kr = ['월','화','수','목','금','토','일'][ref_day.weekday()]
 date_display = ref_day.strftime(f'%Y년 %m월 %d일 ({weekday_kr})')
 date_label = "당일" if is_today else "전영업일"
 update_time = kst_now.strftime('%H:%M')
-
 print(f"기준일: {date_display} ({date_label})")
 
 headers = {
@@ -33,108 +32,66 @@ headers = {
     'Referer': 'https://finance.naver.com'
 }
 
-utc_hour = datetime.utcnow().hour
-is_news_only = (utc_hour != 7) and os.path.exists('docs/index.html')
-is_full_update = not is_news_only
+def fetch_stocks(sosok, market, limit=10):
+    stocks = []
+    url = f"https://finance.naver.com/sise/sise_rise.naver?sosok={sosok}"
+    resp = requests.get(url, headers=headers, timeout=10)
+    soup = BeautifulSoup(resp.text, 'html.parser')
+    table = soup.find('table', class_='type_2')
+    if not table:
+        print(f"{market} 테이블 없음")
+        return []
+    for row in table.find_all('tr'):
+        cols = row.find_all('td')
+        if len(cols) >= 6:
+            try:
+                name_tag = cols[1].find('a')
+                if not name_tag: continue
+                name = name_tag.text.strip()
+                code = name_tag['href'].split('code=')[-1] if 'code=' in name_tag.get('href','') else ''
+                price = int(re.sub(r'[^\d]', '', cols[2].text) or 0)
+                change_raw = cols[3].text.strip()
+                is_upper = '상한가' in change_raw
+                change_amt = int(re.sub(r'[^\d,]', '', change_raw).replace(',','') or 0)
+                change_rate = cols[4].text.strip()
+                volume = int(re.sub(r'[^\d]', '', cols[5].text) or 0)
+                if name and price:
+                    stocks.append({'name': name, 'code': code, 'price': price,
+                        'change_amt': change_amt, 'change_rate': change_rate,
+                        'volume': volume, 'market': market, 'is_upper': is_upper})
+            except: pass
+    stocks.sort(key=lambda s: float(s['change_rate'].replace('%','').replace('+','').strip() or 0), reverse=True)
+    print(f"{market} {len(stocks[:limit])}개 수집")
+    return stocks[:limit]
 
-print(f"업데이트 모드: {'뉴스만' if is_news_only else '전체'}")
+def make_rows(stocks):
+    rows_html = ""
+    for i, s in enumerate(stocks):
+        badge = '<span class="badge upper">상한가</span>' if s['is_upper'] else ''
+        mkt_class = "kospi" if s['market'] == 'KOSPI' else "kosdaq"
+        change_sign = '+' if s['change_amt'] > 0 else ''
+        rows_html += f"""<tr>
+          <td class="rank">{i+1}</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code={s['code']}" target="_blank">{s['name']}</a>
+            {badge}<span class="mkt-badge {mkt_class}">{s['market']}</span>
+          </td>
+          <td class="price">{s['price']:,}원</td>
+          <td class="rise">{change_sign}{s['change_amt']:,}원</td>
+          <td class="rate rise">{s['change_rate']}</td>
+          <td class="vol">{s['volume']:,}</td>
+        </tr>"""
+    return rows_html
 
-existing_kospi_rows = ""
-existing_kosdaq_rows = ""
-existing_date_display = date_display
-existing_date_label = date_label
-
-if is_news_only:
-    with open('docs/index.html', 'r', encoding='utf-8') as f:
-        existing_html = f.read()
-    tbodies = re.findall(r'<tbody>(.*?)</tbody>', existing_html, re.DOTALL)
-    if len(tbodies) >= 1: existing_kospi_rows = tbodies[0]
-    if len(tbodies) >= 2: existing_kosdaq_rows = tbodies[1]
-    date_match = re.search(r'기준 <strong>(.*?)</strong>', existing_html)
-    if date_match: existing_date_display = date_match.group(1)
-    label_match = re.search(r'id="date-label">(.*?)</span>', existing_html)
-    if label_match: existing_date_label = label_match.group(1)
-
-def fetch_top10(sosok, market):
-    result = []
-    for page in [1, 2]:
-        url = f"https://finance.naver.com/sise/sise_rise.naver?sosok={sosok}&page={page}"
-        try:
-            resp = requests.get(url, headers=headers, timeout=10)
-            soup = BeautifulSoup(resp.text, 'html.parser')
-            table = soup.find('table', class_='type_2')
-            if not table:
-                continue
-            for row in table.find_all('tr'):
-                cols = row.find_all('td')
-                if len(cols) >= 6:
-                    try:
-                        name_tag = cols[1].find('a')
-                        if not name_tag: continue
-                        name = name_tag.text.strip()
-                        code = name_tag['href'].split('code=')[-1] if 'code=' in name_tag.get('href','') else ''
-                        price_text = re.sub(r'[^\d]', '', cols[2].text)
-                        price = int(price_text) if price_text else 0
-                        change_raw = cols[3].text.strip()
-                        is_upper = '상한가' in change_raw
-                        change_amt_text = re.sub(r'[^\d,]', '', change_raw).replace(',','')
-                        change_amt = int(change_amt_text) if change_amt_text else 0
-                        change_rate = cols[4].text.strip()
-                        vol_text = re.sub(r'[^\d]', '', cols[5].text)
-                        volume = int(vol_text) if vol_text else 0
-                        if name and price:
-                            result.append({'name': name, 'code': code, 'price': price,
-                                'change_amt': change_amt, 'change_rate': change_rate,
-                                'volume': volume, 'market': market, 'is_upper': is_upper})
-                    except: pass
-        except: pass
-        if len(result) >= 10:
-            break
-
-    def sort_key(s):
-        try: return float(s['change_rate'].replace('%','').replace('+','').strip())
-        except: return 0
-    result.sort(key=sort_key, reverse=True)
-    return result[:10]
-
-kospi_top10 = []
-kosdaq_top10 = []
-kospi_rows = existing_kospi_rows
-kosdaq_rows = existing_kosdaq_rows
-
-if is_full_update:
-    kospi_top10 = fetch_top10('0', 'KOSPI')
-    kosdaq_top10 = fetch_top10('10', 'KOSDAQ')
-    print(f"코스피 {len(kospi_top10)}개, 코스닥 {len(kosdaq_top10)}개 수집")
-
-    def make_rows(stocks):
-        rows_html = ""
-        for i, s in enumerate(stocks):
-            badge = '<span class="badge upper">상한가</span>' if s['is_upper'] else ''
-            mkt_class = "kospi" if s['market'] == 'KOSPI' else "kosdaq"
-            change_sign = '+' if s['change_amt'] > 0 else ''
-            rows_html += f"""
-            <tr>
-              <td class="rank">{i+1}</td>
-              <td class="name-cell">
-                <a href="https://finance.naver.com/item/main.naver?code={s['code']}" target="_blank">{s['name']}</a>
-                {badge}
-                <span class="mkt-badge {mkt_class}">{s['market']}</span>
-              </td>
-              <td class="price">{s['price']:,}원</td>
-              <td class="rise">{change_sign}{s['change_amt']:,}원</td>
-              <td class="rate rise">{s['change_rate']}</td>
-              <td class="vol">{s['volume']:,}</td>
-            </tr>"""
-        return rows_html
-
-    kospi_rows = make_rows(kospi_top10)
-    kosdaq_rows = make_rows(kosdaq_top10)
+def make_table(rows):
+    return f"""<table>
+      <thead><tr><th>#</th><th>종목명</th><th>현재가</th><th>전일비</th><th>등락률</th><th>거래량</th></tr></thead>
+      <tbody>{rows}</tbody>
+    </table>"""
 
 def get_stock_news(code, name, max_items=2):
-    url = f"https://finance.naver.com/item/news_news.naver?code={code}&page=1"
     try:
-        r = requests.get(url, headers=headers, timeout=5)
+        r = requests.get(f"https://finance.naver.com/item/news_news.naver?code={code}&page=1", headers=headers, timeout=5)
         soup = BeautifulSoup(r.text, 'html.parser')
         news_list = []
         for row in soup.select('table.type5 tr'):
@@ -150,9 +107,8 @@ def get_stock_news(code, name, max_items=2):
     except: return []
 
 def get_economy_news(max_items=8):
-    url = "https://finance.naver.com/news/news_list.naver?mode=LSS2D&section_id=101&section_id2=258"
     try:
-        r = requests.get(url, headers=headers, timeout=5)
+        r = requests.get("https://finance.naver.com/news/news_list.naver?mode=LSS2D&section_id=101&section_id2=258", headers=headers, timeout=5)
         soup = BeautifulSoup(r.text, 'html.parser')
         news_list = []
         for a in soup.select('dd.articleSubject a'):
@@ -163,23 +119,14 @@ def get_economy_news(max_items=8):
         return news_list
     except: return []
 
+# 항상 전부 수집
+kospi = fetch_stocks('0', 'KOSPI', 10)
+kosdaq = fetch_stocks('10', 'KOSDAQ', 10)
+
 stock_news = []
-all_top = kospi_top10 + kosdaq_top10
-if is_full_update and all_top:
-    for s in all_top[:10]:
-        stock_news.extend(get_stock_news(s['code'], s['name'], 2))
-elif is_news_only:
-    with open('docs/index.html', 'r', encoding='utf-8') as f:
-        existing_html = f.read()
-    codes = re.findall(r'code=(\d+)', existing_html)[:10]
-    names = re.findall(r'code=\d+" target="_blank">([^<]+)</a>', existing_html)[:10]
-    for code, name in zip(codes, names):
-        stock_news.extend(get_stock_news(code, name, 2))
-
+for s in (kospi + kosdaq)[:10]:
+    stock_news.extend(get_stock_news(s['code'], s['name'], 2))
 eco_news = get_economy_news(8)
-
-final_date = date_display if is_full_update else existing_date_display
-final_label = date_label if is_full_update else existing_date_label
 
 stock_news_html = "".join([
     f'<div class="news-item"><span class="news-tag">{n["stock"]}</span><a href="{n["url"]}" target="_blank">{n["title"]}</a><span class="news-date">{n["date"]}</span></div>'
@@ -188,18 +135,12 @@ eco_news_html = "".join([
     f'<div class="news-item"><a href="{n["url"]}" target="_blank">{n["title"]}</a></div>'
     for n in eco_news])
 
-def make_table(rows):
-    return f"""<table>
-      <thead><tr><th>#</th><th>종목명</th><th>현재가</th><th>전일비</th><th>등락률</th><th>거래량</th></tr></thead>
-      <tbody>{rows}</tbody>
-    </table>"""
-
 html = f"""<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>한국 주식 현황 | {final_date}</title>
+<title>한국 주식 현황 | {date_display}</title>
 <style>
   *{{margin:0;padding:0;box-sizing:border-box}}
   body{{font-family:'Noto Sans KR',-apple-system,sans-serif;background:#0d1117;color:#e6edf3;min-height:100vh}}
@@ -255,7 +196,7 @@ html = f"""<!DOCTYPE html>
 <header>
   <div class="logo">📈 주식<span>레이더</span></div>
   <div class="header-right">
-    <div class="header-date"><span id="date-label">{final_label}</span> 기준 <strong>{final_date}</strong> · 네이버 금융</div>
+    <div class="header-date"><span id="date-label">{date_label}</span> 기준 <strong>{date_display}</strong> · 네이버 금융</div>
     <div class="header-update">주가 평일 오후 4시 업데이트 · 경제 뉴스 <span class="news-live">매시간 자동 업데이트</span> · 최근 갱신 {update_time} KST</div>
   </div>
 </header>
@@ -263,11 +204,11 @@ html = f"""<!DOCTYPE html>
   <div class="left-panel">
     <div class="card">
       <div class="card-header"><span>🔵</span><h2>코스피 상승률 TOP 10</h2><span class="card-subtitle">KRX 종가 기준 · 등락률 순</span></div>
-      {make_table(kospi_rows)}
+      {make_table(make_rows(kospi))}
     </div>
     <div class="card">
       <div class="card-header"><span>🟢</span><h2>코스닥 상승률 TOP 10</h2><span class="card-subtitle">KRX 종가 기준 · 등락률 순</span></div>
-      {make_table(kosdaq_rows)}
+      {make_table(make_rows(kosdaq))}
     </div>
   </div>
   <div class="news-panel">
@@ -282,7 +223,7 @@ html = f"""<!DOCTYPE html>
   </div>
 </div>
 <footer>
-  ※ 투자 판단의 책임은 본인에게 있습니다. | 데이터 기준일: {final_date} | <a href="https://finance.naver.com" target="_blank">네이버 금융</a>
+  ※ 투자 판단의 책임은 본인에게 있습니다. | 데이터 기준일: {date_display} | <a href="https://finance.naver.com" target="_blank">네이버 금융</a>
 </footer>
 </body>
 </html>"""
@@ -291,4 +232,4 @@ os.makedirs('docs', exist_ok=True)
 with open('docs/index.html', 'w', encoding='utf-8') as f:
     f.write(html)
 
-print(f"완료! {'뉴스만' if is_news_only else '전체'} 업데이트 | 기준일: {final_date} ({final_label}) | {update_time} KST")
+print(f"완료! 코스피 {len(kospi)}개, 코스닥 {len(kosdaq)}개 | {date_display} ({date_label}) | {update_time} KST")
