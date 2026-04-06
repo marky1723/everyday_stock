@@ -5,7 +5,6 @@ import os
 import holidays
 from datetime import datetime, timedelta
 
-# ── 한국 시간 기준 현재 시각
 kst_now = datetime.utcnow() + timedelta(hours=9)
 kr_holidays = holidays.KR(years=kst_now.year)
 
@@ -13,10 +12,8 @@ def is_business_day(d):
     return d.weekday() < 5 and d.date() not in kr_holidays
 
 def get_reference_day():
-    # 오늘이 영업일이고 오후 4시 이후면 → 오늘
     if is_business_day(kst_now) and kst_now.hour >= 16:
         return kst_now
-    # 그 외 → 가장 최근 영업일 (오늘 포함 이전으로 탐색)
     d = kst_now - timedelta(days=1)
     while not is_business_day(d):
         d -= timedelta(days=1)
@@ -36,39 +33,40 @@ headers = {
     'Referer': 'https://finance.naver.com'
 }
 
-# ── 시간 판단: 오후 4시 전체 업데이트 or 매시간 뉴스만 업데이트
 utc_hour = datetime.utcnow().hour
-is_full_update = (utc_hour == 7)  # UTC 07:00 = KST 16:00
+is_full_update = (utc_hour == 7)
 
-# ── 기존 HTML에서 주가 테이블 유지 (뉴스만 업데이트할 때)
-existing_stock_rows = ""
+# ── 기존 HTML 유지용
+existing_kospi_rows = ""
+existing_kosdaq_rows = ""
 existing_date_display = date_display
 existing_date_label = date_label
+
 if not is_full_update and os.path.exists('docs/index.html'):
     with open('docs/index.html', 'r', encoding='utf-8') as f:
         existing_html = f.read()
-    tbody_match = re.search(r'<tbody>(.*?)</tbody>', existing_html, re.DOTALL)
-    if tbody_match:
-        existing_stock_rows = tbody_match.group(1)
+    tbodies = re.findall(r'<tbody>(.*?)</tbody>', existing_html, re.DOTALL)
+    if len(tbodies) >= 1: existing_kospi_rows = tbodies[0]
+    if len(tbodies) >= 2: existing_kosdaq_rows = tbodies[1]
     date_match = re.search(r'기준 <strong>(.*?)</strong>', existing_html)
-    if date_match:
-        existing_date_display = date_match.group(1)
+    if date_match: existing_date_display = date_match.group(1)
     label_match = re.search(r'id="date-label">(.*?)</span>', existing_html)
-    if label_match:
-        existing_date_label = label_match.group(1)
+    if label_match: existing_date_label = label_match.group(1)
 
-# ── 주가 수집 (오후 4시 전체 업데이트 시에만)
-top20 = []
-stock_rows = existing_stock_rows
+# ── 주가 수집
+kospi_top20 = []
+kosdaq_top20 = []
+kospi_rows = existing_kospi_rows
+kosdaq_rows = existing_kosdaq_rows
 
 if is_full_update:
-    all_stocks = []
     for market, sosok in [('KOSPI', '0'), ('KOSDAQ', '10')]:
         url = f"https://finance.naver.com/sise/sise_rise.naver?sosok={sosok}"
         resp = requests.get(url, headers=headers)
         soup = BeautifulSoup(resp.text, 'html.parser')
         table = soup.find('table', class_='type_2')
         if not table: continue
+        stocks = []
         for row in table.find_all('tr'):
             cols = row.find_all('td')
             if len(cols) >= 6:
@@ -87,37 +85,44 @@ if is_full_update:
                     vol_text = re.sub(r'[^\d]', '', cols[5].text)
                     volume = int(vol_text) if vol_text else 0
                     if name and price:
-                        all_stocks.append({'name': name, 'code': code, 'price': price,
+                        stocks.append({'name': name, 'code': code, 'price': price,
                             'change_amt': change_amt, 'change_rate': change_rate,
                             'volume': volume, 'market': market, 'is_upper': is_upper})
                 except: pass
 
-    def sort_key(s):
-        r = s['change_rate'].replace('%','').replace('+','').strip()
-        try: return float(r)
-        except: return 0
+        def sort_key(s):
+            r = s['change_rate'].replace('%','').replace('+','').strip()
+            try: return float(r)
+            except: return 0
 
-    all_stocks.sort(key=sort_key, reverse=True)
-    top20 = all_stocks[:20]
+        stocks.sort(key=sort_key, reverse=True)
+        top20 = stocks[:20]
 
-    stock_rows = ""
-    for i, s in enumerate(top20):
-        badge = '<span class="badge upper">상한가</span>' if s['is_upper'] else ''
-        mkt_class = "kospi" if s['market'] == 'KOSPI' else "kosdaq"
-        change_sign = '+' if s['change_amt'] > 0 else ''
-        stock_rows += f"""
-        <tr>
-          <td class="rank">{i+1}</td>
-          <td class="name-cell">
-            <a href="https://finance.naver.com/item/main.naver?code={s['code']}" target="_blank">{s['name']}</a>
-            {badge}
-            <span class="mkt-badge {mkt_class}">{s['market']}</span>
-          </td>
-          <td class="price">{s['price']:,}원</td>
-          <td class="rise">{change_sign}{s['change_amt']:,}원</td>
-          <td class="rate rise">{s['change_rate']}</td>
-          <td class="vol">{s['volume']:,}</td>
-        </tr>"""
+        rows_html = ""
+        for i, s in enumerate(top20):
+            badge = '<span class="badge upper">상한가</span>' if s['is_upper'] else ''
+            mkt_class = "kospi" if s['market'] == 'KOSPI' else "kosdaq"
+            change_sign = '+' if s['change_amt'] > 0 else ''
+            rows_html += f"""
+            <tr>
+              <td class="rank">{i+1}</td>
+              <td class="name-cell">
+                <a href="https://finance.naver.com/item/main.naver?code={s['code']}" target="_blank">{s['name']}</a>
+                {badge}
+                <span class="mkt-badge {mkt_class}">{s['market']}</span>
+              </td>
+              <td class="price">{s['price']:,}원</td>
+              <td class="rise">{change_sign}{s['change_amt']:,}원</td>
+              <td class="rate rise">{s['change_rate']}</td>
+              <td class="vol">{s['volume']:,}</td>
+            </tr>"""
+
+        if market == 'KOSPI':
+            kospi_top20 = top20
+            kospi_rows = rows_html
+        else:
+            kosdaq_top20 = top20
+            kosdaq_rows = rows_html
 
 # ── 뉴스 수집
 def get_stock_news(code, name, max_items=2):
@@ -153,8 +158,9 @@ def get_economy_news(max_items=8):
     except: return []
 
 stock_news = []
-if is_full_update and top20:
-    for s in top20[:10]:
+all_top20 = kospi_top20 + kosdaq_top20
+if is_full_update and all_top20:
+    for s in all_top20[:10]:
         stock_news.extend(get_stock_news(s['code'], s['name'], 2))
 elif not is_full_update and os.path.exists('docs/index.html'):
     with open('docs/index.html', 'r', encoding='utf-8') as f:
@@ -166,7 +172,6 @@ elif not is_full_update and os.path.exists('docs/index.html'):
 
 eco_news = get_economy_news(8)
 
-# ── HTML 생성
 final_date = date_display if is_full_update else existing_date_display
 final_label = date_label if is_full_update else existing_date_label
 
@@ -176,6 +181,13 @@ stock_news_html = "".join([
 eco_news_html = "".join([
     f'<div class="news-item"><a href="{n["url"]}" target="_blank">{n["title"]}</a></div>'
     for n in eco_news])
+
+def make_table(rows):
+    return f"""
+    <table>
+      <thead><tr><th>#</th><th>종목명</th><th>현재가</th><th>전일비</th><th>등락률</th><th>거래량</th></tr></thead>
+      <tbody>{rows}</tbody>
+    </table>"""
 
 html = f"""<!DOCTYPE html>
 <html lang="ko">
@@ -194,6 +206,7 @@ html = f"""<!DOCTYPE html>
   .header-update{{font-size:11px;color:#6e7681;text-align:right}}
   .news-live{{color:#3fb950;font-weight:600}}
   .container{{max-width:1400px;margin:0 auto;padding:28px 24px;display:grid;grid-template-columns:1fr 420px;gap:24px}}
+  .left-panel{{display:flex;flex-direction:column;gap:24px}}
   .card{{background:#161b22;border:1px solid #30363d;border-radius:12px;overflow:hidden}}
   .card-header{{padding:18px 24px 14px;border-bottom:1px solid #21262d;display:flex;align-items:center;gap:10px}}
   .card-header h2{{font-size:16px;font-weight:600}}
@@ -224,7 +237,7 @@ html = f"""<!DOCTYPE html>
   .news-item a:hover{{color:#58a6ff}}
   .news-tag{{display:inline-block;background:#1f3a5f;color:#58a6ff;font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;margin-bottom:5px}}
   .news-date{{display:block;font-size:11px;color:#6e7681;margin-top:4px}}
-  .news-scroll{{max-height:360px;overflow-y:auto}}
+  .news-scroll{{max-height:400px;overflow-y:auto}}
   .news-scroll::-webkit-scrollbar{{width:4px}}
   .news-scroll::-webkit-scrollbar-thumb{{background:#30363d;border-radius:2px}}
   .live-badge{{display:inline-block;background:#1e3a2f;color:#3fb950;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:8px}}
@@ -242,12 +255,15 @@ html = f"""<!DOCTYPE html>
   </div>
 </header>
 <div class="container">
-  <div class="card">
-    <div class="card-header"><span>🔥</span><h2>상승률 상위 종목 TOP 20</h2><span class="card-subtitle">KRX 종가 기준 · 등락률 순</span></div>
-    <table>
-      <thead><tr><th>#</th><th>종목명</th><th>현재가</th><th>전일비</th><th>등락률</th><th>거래량</th></tr></thead>
-      <tbody>{stock_rows}</tbody>
-    </table>
+  <div class="left-panel">
+    <div class="card">
+      <div class="card-header"><span>🔵</span><h2>코스피 상승률 TOP 20</h2><span class="card-subtitle">KRX 종가 기준 · 등락률 순</span></div>
+      {make_table(kospi_rows)}
+    </div>
+    <div class="card">
+      <div class="card-header"><span>🟢</span><h2>코스닥 상승률 TOP 20</h2><span class="card-subtitle">KRX 종가 기준 · 등락률 순</span></div>
+      {make_table(kosdaq_rows)}
+    </div>
   </div>
   <div class="news-panel">
     <div class="card">
