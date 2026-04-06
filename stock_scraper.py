@@ -121,7 +121,7 @@ def get_economy_news(max_items=8):
 
 # 항상 전부 수집
 kospi = fetch_stocks('0', 'KOSPI', 10)
-kosdaq = fetch_stocks('10', 'KOSDAQ', 10)
+kosdaq = fetch_stocks('1', 'KOSDAQ', 10)
 
 stock_news = []
 for s in (kospi + kosdaq)[:10]:
