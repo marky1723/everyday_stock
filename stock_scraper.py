@@ -34,7 +34,11 @@ headers = {
 }
 
 utc_hour = datetime.utcnow().hour
-is_full_update = (utc_hour == 7)
+# 매시간 실행 중 오후 4시(UTC 7시)가 아니고 기존 파일이 있으면 뉴스만 업데이트
+is_news_only = (utc_hour != 7) and os.path.exists('docs/index.html')
+is_full_update = not is_news_only
+
+print(f"업데이트 모드: {'뉴스만' if is_news_only else '전체'}")
 
 # ── 기존 HTML 유지용
 existing_kospi_rows = ""
@@ -42,7 +46,7 @@ existing_kosdaq_rows = ""
 existing_date_display = date_display
 existing_date_label = date_label
 
-if not is_full_update and os.path.exists('docs/index.html'):
+if is_news_only:
     with open('docs/index.html', 'r', encoding='utf-8') as f:
         existing_html = f.read()
     tbodies = re.findall(r'<tbody>(.*?)</tbody>', existing_html, re.DOTALL)
@@ -53,7 +57,7 @@ if not is_full_update and os.path.exists('docs/index.html'):
     label_match = re.search(r'id="date-label">(.*?)</span>', existing_html)
     if label_match: existing_date_label = label_match.group(1)
 
-# ── 주가 수집
+# ── 주가 수집 (전체 업데이트 시에만)
 kospi_top20 = []
 kosdaq_top20 = []
 kospi_rows = existing_kospi_rows
@@ -90,12 +94,7 @@ if is_full_update:
                             'volume': volume, 'market': market, 'is_upper': is_upper})
                 except: pass
 
-        def sort_key(s):
-            r = s['change_rate'].replace('%','').replace('+','').strip()
-            try: return float(r)
-            except: return 0
-
-        stocks.sort(key=sort_key, reverse=True)
+        stocks.sort(key=lambda s: float(s['change_rate'].replace('%','').replace('+','').strip()) if s['change_rate'].replace('%','').replace('+','').strip().replace('.','').lstrip('-').isdigit() else 0, reverse=True)
         top20 = stocks[:20]
 
         rows_html = ""
@@ -162,7 +161,7 @@ all_top20 = kospi_top20 + kosdaq_top20
 if is_full_update and all_top20:
     for s in all_top20[:10]:
         stock_news.extend(get_stock_news(s['code'], s['name'], 2))
-elif not is_full_update and os.path.exists('docs/index.html'):
+elif is_news_only:
     with open('docs/index.html', 'r', encoding='utf-8') as f:
         existing_html = f.read()
     codes = re.findall(r'code=(\d+)', existing_html)[:10]
@@ -286,4 +285,4 @@ os.makedirs('docs', exist_ok=True)
 with open('docs/index.html', 'w', encoding='utf-8') as f:
     f.write(html)
 
-print(f"완료! {'전체' if is_full_update else '뉴스만'} 업데이트 | 기준일: {final_date} ({final_label}) | {update_time} KST")
+print(f"완료! {'뉴스만' if is_news_only else '전체'} 업데이트 | 기준일: {final_date} ({final_label}) | {update_time} KST")
