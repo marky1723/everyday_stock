@@ -3,14 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>한국 주식 현황 | 2026년 04월 03일 (금)</title>
+<title>한국 주식 현황 | 2026년 04월 06일 (월)</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:#0d1117;color:#e6edf3;min-height:100vh}
-  header{background:linear-gradient(135deg,#161b22,#1f2937);border-bottom:1px solid #30363d;padding:20px 32px;display:flex;align-items:center;justify-content:space-between}
+  header{background:linear-gradient(135deg,#161b22,#1f2937);border-bottom:1px solid #30363d;padding:20px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
   .logo{font-size:22px;font-weight:700;color:#58a6ff}.logo span{color:#f0883e}
+  .header-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
   .header-date{font-size:13px;color:#8b949e;background:#21262d;padding:6px 14px;border-radius:20px;border:1px solid #30363d}
   .header-date strong{color:#e6edf3}
+  .header-update{font-size:11px;color:#6e7681;text-align:right}
+  .news-live{color:#3fb950;font-weight:600}
   .container{max-width:1400px;margin:0 auto;padding:28px 24px;display:grid;grid-template-columns:1fr 420px;gap:24px}
   .card{background:#161b22;border:1px solid #30363d;border-radius:12px;overflow:hidden}
   .card-header{padding:18px 24px 14px;border-bottom:1px solid #21262d;display:flex;align-items:center;gap:10px}
@@ -43,6 +46,9 @@
   .news-tag{display:inline-block;background:#1f3a5f;color:#58a6ff;font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;margin-bottom:5px}
   .news-date{display:block;font-size:11px;color:#6e7681;margin-top:4px}
   .news-scroll{max-height:360px;overflow-y:auto}
+  .news-scroll::-webkit-scrollbar{width:4px}
+  .news-scroll::-webkit-scrollbar-thumb{background:#30363d;border-radius:2px}
+  .live-badge{display:inline-block;background:#1e3a2f;color:#3fb950;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:8px}
   footer{text-align:center;padding:20px;color:#6e7681;font-size:12px;border-top:1px solid #21262d;margin-top:8px}
   footer a{color:#58a6ff;text-decoration:none}
   @media(max-width:900px){.container{grid-template-columns:1fr}}
@@ -51,269 +57,272 @@
 <body>
 <header>
   <div class="logo">📈 주식<span>레이더</span></div>
-  <div class="header-date">전영업일 기준 <strong>2026년 04월 03일 (금)</strong> · 데이터 출처: 네이버 금융</div>
+  <div class="header-right">
+    <div class="header-date"><span id="date-label">당일</span> 기준 <strong>2026년 04월 06일 (월)</strong> · 네이버 금융</div>
+    <div class="header-update">주가 평일 오후 4시 업데이트 · 경제 뉴스 <span class="news-live">매시간 자동 업데이트</span> · 최근 갱신 16:10 KST</div>
+  </div>
 </header>
 <div class="container">
   <div class="card">
-    <div class="card-header"><span>🔥</span><h2>상승률 상위 종목 TOP 20</h2><span class="card-subtitle">상한가 포함 · 등락률 순</span></div>
+    <div class="card-header"><span>🔥</span><h2>상승률 상위 종목 TOP 20</h2><span class="card-subtitle">KRX 종가 기준 · 등락률 순</span></div>
     <table>
       <thead><tr><th>#</th><th>종목명</th><th>현재가</th><th>전일비</th><th>등락률</th><th>거래량</th></tr></thead>
       <tbody>
-    <tr>
-      <td class="rank">1</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=322000" target="_blank">HD현대에너지솔루션</a>
-        <span class="badge upper">상한가</span>
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">191,100원</td>
-      <td class="rise">+44,100원</td>
-      <td class="rate rise">+30.00%</td>
-      <td class="vol">3,335,510</td>
-    </tr>
-    <tr>
-      <td class="rank">2</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=012205" target="_blank">계양전기우</a>
-        <span class="badge upper">상한가</span>
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">11,730원</td>
-      <td class="rise">+2,700원</td>
-      <td class="rate rise">+29.90%</td>
-      <td class="vol">3,312,927</td>
-    </tr>
-    <tr>
-      <td class="rank">3</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=017900" target="_blank">광전자</a>
-        <span class="badge upper">상한가</span>
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">4,455원</td>
-      <td class="rise">+1,025원</td>
-      <td class="rate rise">+29.88%</td>
-      <td class="vol">25,957,853</td>
-    </tr>
-    <tr>
-      <td class="rank">4</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=093370" target="_blank">후성</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">8,920원</td>
-      <td class="rise">+1,980원</td>
-      <td class="rate rise">+28.53%</td>
-      <td class="vol">8,942,707</td>
-    </tr>
-    <tr>
-      <td class="rank">5</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=011930" target="_blank">신성이엔지</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">3,445원</td>
-      <td class="rise">+695원</td>
-      <td class="rate rise">+25.27%</td>
-      <td class="vol">192,639,915</td>
-    </tr>
-    <tr>
-      <td class="rank">6</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=010820" target="_blank">퍼스텍</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">9,130원</td>
-      <td class="rise">+1,820원</td>
-      <td class="rate rise">+24.90%</td>
-      <td class="vol">13,998,432</td>
-    </tr>
-    <tr>
-      <td class="rank">7</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=475150" target="_blank">SK이터닉스</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">68,200원</td>
-      <td class="rise">+13,200원</td>
-      <td class="rate rise">+24.00%</td>
-      <td class="vol">11,359,132</td>
-    </tr>
-    <tr>
-      <td class="rank">8</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=001250" target="_blank">GS글로벌</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">3,170원</td>
-      <td class="rise">+575원</td>
-      <td class="rate rise">+22.16%</td>
-      <td class="vol">28,275,410</td>
-    </tr>
-    <tr>
-      <td class="rank">9</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=092790" target="_blank">넥스틸</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">14,920원</td>
-      <td class="rise">+2,630원</td>
-      <td class="rate rise">+21.40%</td>
-      <td class="vol">6,107,663</td>
-    </tr>
-    <tr>
-      <td class="rank">10</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=023150" target="_blank">MH에탄올</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">5,050원</td>
-      <td class="rise">+840원</td>
-      <td class="rate rise">+19.95%</td>
-      <td class="vol">2,410,056</td>
-    </tr>
-    <tr>
-      <td class="rank">11</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=112610" target="_blank">씨에스윈드</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">76,900원</td>
-      <td class="rise">+12,000원</td>
-      <td class="rate rise">+18.49%</td>
-      <td class="vol">2,288,237</td>
-    </tr>
-    <tr>
-      <td class="rank">12</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=028050" target="_blank">삼성E&A</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">40,550원</td>
-      <td class="rise">+5,450원</td>
-      <td class="rate rise">+15.53%</td>
-      <td class="vol">7,790,091</td>
-    </tr>
-    <tr>
-      <td class="rank">13</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=077970" target="_blank">STX엔진</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">36,200원</td>
-      <td class="rise">+4,350원</td>
-      <td class="rate rise">+13.66%</td>
-      <td class="vol">542,117</td>
-    </tr>
-    <tr>
-      <td class="rank">14</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=017960" target="_blank">한국카본</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">45,000원</td>
-      <td class="rise">+5,400원</td>
-      <td class="rate rise">+13.64%</td>
-      <td class="vol">1,073,410</td>
-    </tr>
-    <tr>
-      <td class="rank">15</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=530140" target="_blank">삼성 iSelect 레버리지 조선 TOP10 TR ETN</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">32,810원</td>
-      <td class="rise">+3,910원</td>
-      <td class="rate rise">+13.53%</td>
-      <td class="vol">4,592</td>
-    </tr>
-    <tr>
-      <td class="rank">16</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=760016" target="_blank">키움 레버리지 조선TOP10 ETN</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">102,510원</td>
-      <td class="rise">+11,945원</td>
-      <td class="rate rise">+13.19%</td>
-      <td class="vol">2,656</td>
-    </tr>
-    <tr>
-      <td class="rank">17</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=0080Y0" target="_blank">SOL 조선TOP3플러스레버리지</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">15,485원</td>
-      <td class="rise">+1,670원</td>
-      <td class="rate rise">+12.09%</td>
-      <td class="vol">1,693,444</td>
-    </tr>
-    <tr>
-      <td class="rank">18</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=550092" target="_blank">N2 월간 레버리지 방위산업 Top5 ETN</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">280,200원</td>
-      <td class="rise">+30,200원</td>
-      <td class="rate rise">+12.08%</td>
-      <td class="vol">2,228</td>
-    </tr>
-    <tr>
-      <td class="rank">19</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=010060" target="_blank">OCI홀딩스</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">229,500원</td>
-      <td class="rise">+24,500원</td>
-      <td class="rate rise">+11.95%</td>
-      <td class="vol">499,507</td>
-    </tr>
-    <tr>
-      <td class="rank">20</td>
-      <td class="name-cell">
-        <a href="https://finance.naver.com/item/main.naver?code=003030" target="_blank">세아제강지주</a>
-        
-        <span class="mkt-badge kospi">KOSPI</span>
-      </td>
-      <td class="price">253,000원</td>
-      <td class="rise">+26,000원</td>
-      <td class="rate rise">+11.45%</td>
-      <td class="vol">113,173</td>
-    </tr></tbody>
+        <tr>
+          <td class="rank">1</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=005810" target="_blank">풍산홀딩스</a>
+            <span class="badge upper">상한가</span>
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">47,250원</td>
+          <td class="rise">+10,900원</td>
+          <td class="rate rise">+29.99%</td>
+          <td class="vol">1,127,965</td>
+        </tr>
+        <tr>
+          <td class="rank">2</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=017900" target="_blank">광전자</a>
+            <span class="badge upper">상한가</span>
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">5,790원</td>
+          <td class="rise">+1,335원</td>
+          <td class="rate rise">+29.97%</td>
+          <td class="vol">23,301,868</td>
+        </tr>
+        <tr>
+          <td class="rank">3</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=008350" target="_blank">남선알미늄</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">2,130원</td>
+          <td class="rise">+325원</td>
+          <td class="rate rise">+18.01%</td>
+          <td class="vol">198,814,422</td>
+        </tr>
+        <tr>
+          <td class="rank">4</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=001250" target="_blank">GS글로벌</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">3,690원</td>
+          <td class="rise">+520원</td>
+          <td class="rate rise">+16.40%</td>
+          <td class="vol">40,428,744</td>
+        </tr>
+        <tr>
+          <td class="rank">5</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=001780" target="_blank">알루코</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">2,780원</td>
+          <td class="rise">+340원</td>
+          <td class="rate rise">+13.93%</td>
+          <td class="vol">39,054,825</td>
+        </tr>
+        <tr>
+          <td class="rank">6</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=103140" target="_blank">풍산</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">109,300원</td>
+          <td class="rise">+12,500원</td>
+          <td class="rate rise">+12.91%</td>
+          <td class="vol">2,302,095</td>
+        </tr>
+        <tr>
+          <td class="rank">7</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=018470" target="_blank">조일알미늄</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">1,606원</td>
+          <td class="rise">+182원</td>
+          <td class="rate rise">+12.78%</td>
+          <td class="vol">83,790,988</td>
+        </tr>
+        <tr>
+          <td class="rank">8</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=028050" target="_blank">삼성E&A</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">45,650원</td>
+          <td class="rise">+5,100원</td>
+          <td class="rate rise">+12.58%</td>
+          <td class="vol">10,809,716</td>
+        </tr>
+        <tr>
+          <td class="rank">9</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=020150" target="_blank">롯데에너지머티리얼즈</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">45,450원</td>
+          <td class="rise">+5,000원</td>
+          <td class="rate rise">+12.36%</td>
+          <td class="vol">1,132,464</td>
+        </tr>
+        <tr>
+          <td class="rank">10</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=093370" target="_blank">후성</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">9,900원</td>
+          <td class="rise">+980원</td>
+          <td class="rate rise">+10.99%</td>
+          <td class="vol">9,893,566</td>
+        </tr>
+        <tr>
+          <td class="rank">11</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=008355" target="_blank">남선알미우</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">15,520원</td>
+          <td class="rise">+1,320원</td>
+          <td class="rate rise">+9.30%</td>
+          <td class="vol">44,319</td>
+        </tr>
+        <tr>
+          <td class="rank">12</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=006490" target="_blank">인스코비</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">479원</td>
+          <td class="rise">+39원</td>
+          <td class="rate rise">+8.86%</td>
+          <td class="vol">14,959,433</td>
+        </tr>
+        <tr>
+          <td class="rank">13</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=006650" target="_blank">대한유화</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">140,600원</td>
+          <td class="rise">+10,700원</td>
+          <td class="rate rise">+8.24%</td>
+          <td class="vol">93,427</td>
+        </tr>
+        <tr>
+          <td class="rank">14</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=298020" target="_blank">효성티앤씨</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">406,500원</td>
+          <td class="rise">+30,500원</td>
+          <td class="rate rise">+8.11%</td>
+          <td class="vol">51,118</td>
+        </tr>
+        <tr>
+          <td class="rank">15</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=014160" target="_blank">대영포장</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">1,270원</td>
+          <td class="rise">+91원</td>
+          <td class="rate rise">+7.72%</td>
+          <td class="vol">59,035,701</td>
+        </tr>
+        <tr>
+          <td class="rank">16</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=103590" target="_blank">일진전기</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">76,000원</td>
+          <td class="rise">+5,000원</td>
+          <td class="rate rise">+7.04%</td>
+          <td class="vol">338,131</td>
+        </tr>
+        <tr>
+          <td class="rank">17</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=014915" target="_blank">성문전자우</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">4,395원</td>
+          <td class="rise">+265원</td>
+          <td class="rate rise">+6.42%</td>
+          <td class="vol">897</td>
+        </tr>
+        <tr>
+          <td class="rank">18</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=002690" target="_blank">동일제강</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">1,620원</td>
+          <td class="rise">+97원</td>
+          <td class="rate rise">+6.37%</td>
+          <td class="vol">6,078,245</td>
+        </tr>
+        <tr>
+          <td class="rank">19</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=017550" target="_blank">수산세보틱스</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">2,125원</td>
+          <td class="rise">+125원</td>
+          <td class="rate rise">+6.25%</td>
+          <td class="vol">1,347,341</td>
+        </tr>
+        <tr>
+          <td class="rank">20</td>
+          <td class="name-cell">
+            <a href="https://finance.naver.com/item/main.naver?code=006980" target="_blank">우성</a>
+            
+            <span class="mkt-badge kospi">KOSPI</span>
+          </td>
+          <td class="price">21,300원</td>
+          <td class="rise">+1,250원</td>
+          <td class="rate rise">+6.23%</td>
+          <td class="vol">10,252</td>
+        </tr></tbody>
     </table>
   </div>
   <div class="news-panel">
     <div class="card">
       <div class="card-header"><span>📰</span><h2>급등 종목 관련 뉴스</h2></div>
-      <div class="news-scroll"><div class="news-item"><span class="news-tag">HD현대에너지솔루션</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0000104573&office_id=024&code=322000&page=1&sm=" target="_blank">새로 쓰는 산업 지도...원전 인프라 뜨고 전력 다소비 제조 흔들</a><span class="news-date">2026.04.03 21:23</span></div><div class="news-item"><span class="news-tag">HD현대에너지솔루션</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0000037942&office_id=037&code=322000&page=1&sm=" target="_blank">12일 만에 돌아온 외국인 ‘사자’에 코스피 상승 마감</a><span class="news-date">2026.04.03 18:36</span></div><div class="news-item"><span class="news-tag">계양전기우</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003632311&office_id=081&code=012205&page=1&sm=" target="_blank">[서울데이터랩]HD현대에너지솔루션 30.00% 상한가 금일 증시 상승률...</a><span class="news-date">2026.04.03 15:58</span></div><div class="news-item"><span class="news-tag">계양전기우</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003631892&office_id=081&code=012205&page=1&sm=" target="_blank">[서울데이터랩]계양전기우 29.93% 상한가 금일 증시 상승률 1위로 ...</a><span class="news-date">2026.04.02 15:48</span></div><div class="news-item"><span class="news-tag">광전자</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0002417431&office_id=092&code=017900&page=1&sm=" target="_blank">AI 전력난 게임 체인저될까…반도체 '엑시톤 ' 83배 증폭 첫 발견</a><span class="news-date">2026.04.03 17:58</span></div><div class="news-item"><span class="news-tag">광전자</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003632311&office_id=081&code=017900&page=1&sm=" target="_blank">[서울데이터랩]HD현대에너지솔루션 30.00% 상한가 금일 증시 상승률...</a><span class="news-date">2026.04.03 15:58</span></div><div class="news-item"><span class="news-tag">후성</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003632311&office_id=081&code=093370&page=1&sm=" target="_blank">[서울데이터랩]HD현대에너지솔루션 30.00% 상한가 금일 증시 상승률...</a><span class="news-date">2026.04.03 15:58</span></div><div class="news-item"><span class="news-tag">후성</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0005744759&office_id=277&code=093370&page=1&sm=" target="_blank">금호석유화학, ‘스페셜티’로 정면돌파…불확실성 뚫고 고도화 박차</a><span class="news-date">2026.04.03 13:58</span></div><div class="news-item"><span class="news-tag">신성이엔지</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003632311&office_id=081&code=011930&page=1&sm=" target="_blank">[서울데이터랩]HD현대에너지솔루션 30.00% 상한가 금일 증시 상승률...</a><span class="news-date">2026.04.03 15:58</span></div><div class="news-item"><span class="news-tag">신성이엔지</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003632313&office_id=081&code=011930&page=1&sm=" target="_blank">[서울데이터랩]마감 직후 인기 검색 종목 20選</a><span class="news-date">2026.04.03 15:58</span></div><div class="news-item"><span class="news-tag">퍼스텍</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003632311&office_id=081&code=010820&page=1&sm=" target="_blank">[서울데이터랩]HD현대에너지솔루션 30.00% 상한가 금일 증시 상승률...</a><span class="news-date">2026.04.03 15:58</span></div><div class="news-item"><span class="news-tag">퍼스텍</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003626273&office_id=081&code=010820&page=1&sm=" target="_blank">[서울데이터랩]미래에셋생명 30.00% 상한가 금일 증시 상승률 1위로...</a><span class="news-date">2026.03.16 16:14</span></div><div class="news-item"><span class="news-tag">SK이터닉스</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0016002695&office_id=001&code=475150&page=1&sm=" target="_blank">[마켓인사이트] 다가오는 최후통첩 시한…기로에 선 이란 사태</a><span class="news-date">2026.04.05 07:00</span></div><div class="news-item"><span class="news-tag">SK이터닉스</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0004607094&office_id=011&code=475150&page=1&sm=" target="_blank">12거래일 만에 잦아든 ‘셀 코리아’…국민주 ‘삼전·닉스’ 향방은...</a><span class="news-date">2026.04.05 06:31</span></div><div class="news-item"><span class="news-tag">GS글로벌</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0005660731&office_id=009&code=001250&page=1&sm=" target="_blank">HD현대에너지솔루션 상한가…이제는 신재생에너지 시대 [매경 자이앤...</a><span class="news-date">2026.04.03 16:57</span></div><div class="news-item"><span class="news-tag">GS글로벌</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003632311&office_id=081&code=001250&page=1&sm=" target="_blank">[서울데이터랩]HD현대에너지솔루션 30.00% 상한가 금일 증시 상승률...</a><span class="news-date">2026.04.03 15:58</span></div><div class="news-item"><span class="news-tag">넥스틸</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0001247841&office_id=215&code=092790&page=1&sm=" target="_blank">이와중에 20%대 급등…"이란, 美공장 공격" 관련株 줄줄이 ↑</a><span class="news-date">2026.04.03 20:25</span></div><div class="news-item"><span class="news-tag">넥스틸</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0005270796&office_id=015&code=092790&page=1&sm=" target="_blank">이란 철강시설 때린 美…韓 업체들은 '반사익'</a><span class="news-date">2026.04.03 17:50</span></div><div class="news-item"><span class="news-tag">MH에탄올</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003632311&office_id=081&code=023150&page=1&sm=" target="_blank">[서울데이터랩]HD현대에너지솔루션 30.00% 상한가 금일 증시 상승률...</a><span class="news-date">2026.04.03 15:58</span></div><div class="news-item"><span class="news-tag">MH에탄올</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0005246979&office_id=015&code=023150&page=1&sm=" target="_blank">"술 없이 차트 못 봐"…불장에 '나홀로 신저가' 개미 '눈물' [종목...</a><span class="news-date">2026.02.04 22:01</span></div></div>
+      <div class="news-scroll"><div class="news-item"><span class="news-tag">풍산홀딩스</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0000126169&office_id=586&code=005810&page=1&sm=" target="_blank">K9 자주포에 포탄까지 패키지로 수출…한화, 풍산 '탄약'까지 품을까</a><span class="news-date">2026.04.06 16:00</span></div><div class="news-item"><span class="news-tag">풍산홀딩스</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0016005467&office_id=001&code=005810&page=1&sm=" target="_blank">[특징주] 풍산, 탄약사업부 매각 추진 소식에 13% 상승(종합)</a><span class="news-date">2026.04.06 15:47</span></div><div class="news-item"><span class="news-tag">광전자</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003632748&office_id=081&code=017900&page=1&sm=" target="_blank">[서울데이터랩]금일 코스피 거래량 1위 남선알미늄 거래대금 무려 3,1...</a><span class="news-date">2026.04.06 13:39</span></div><div class="news-item"><span class="news-tag">광전자</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003632654&office_id=081&code=017900&page=1&sm=" target="_blank">[서울데이터랩]‘풍산홀딩스’ 29.99% 상한가…실시간 상승률 1위</a><span class="news-date">2026.04.06 09:27</span></div><div class="news-item"><span class="news-tag">남선알미늄</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003632748&office_id=081&code=008350&page=1&sm=" target="_blank">[서울데이터랩]금일 코스피 거래량 1위 남선알미늄 거래대금 무려 3,1...</a><span class="news-date">2026.04.06 13:39</span></div><div class="news-item"><span class="news-tag">남선알미늄</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0013869438&office_id=003&code=008350&page=1&sm=" target="_blank">알루미늄株 급등…남선알미늄 24%↑·조일알미늄 21%↑</a><span class="news-date">2026.04.06 11:10</span></div><div class="news-item"><span class="news-tag">GS글로벌</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003632748&office_id=081&code=001250&page=1&sm=" target="_blank">[서울데이터랩]금일 코스피 거래량 1위 남선알미늄 거래대금 무려 3,1...</a><span class="news-date">2026.04.06 13:39</span></div><div class="news-item"><span class="news-tag">GS글로벌</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0005660731&office_id=009&code=001250&page=1&sm=" target="_blank">HD현대에너지솔루션 상한가…이제는 신재생에너지 시대 [매경 자이앤...</a><span class="news-date">2026.04.03 16:57</span></div><div class="news-item"><span class="news-tag">알루코</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003632748&office_id=081&code=001780&page=1&sm=" target="_blank">[서울데이터랩]금일 코스피 거래량 1위 남선알미늄 거래대금 무려 3,1...</a><span class="news-date">2026.04.06 13:39</span></div><div class="news-item"><span class="news-tag">알루코</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0013869438&office_id=003&code=001780&page=1&sm=" target="_blank">알루미늄株 급등…남선알미늄 24%↑·조일알미늄 21%↑</a><span class="news-date">2026.04.06 11:10</span></div><div class="news-item"><span class="news-tag">풍산</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0000126169&office_id=586&code=103140&page=1&sm=" target="_blank">K9 자주포에 포탄까지 패키지로 수출…한화, 풍산 '탄약'까지 품을까</a><span class="news-date">2026.04.06 16:00</span></div><div class="news-item"><span class="news-tag">풍산</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0016005467&office_id=001&code=103140&page=1&sm=" target="_blank">[특징주] 풍산, 탄약사업부 매각 추진 소식에 13% 상승(종합)</a><span class="news-date">2026.04.06 15:47</span></div><div class="news-item"><span class="news-tag">조일알미늄</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003632748&office_id=081&code=018470&page=1&sm=" target="_blank">[서울데이터랩]금일 코스피 거래량 1위 남선알미늄 거래대금 무려 3,1...</a><span class="news-date">2026.04.06 13:39</span></div><div class="news-item"><span class="news-tag">조일알미늄</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0013869438&office_id=003&code=018470&page=1&sm=" target="_blank">알루미늄株 급등…남선알미늄 24%↑·조일알미늄 21%↑</a><span class="news-date">2026.04.06 11:10</span></div><div class="news-item"><span class="news-tag">삼성E&A</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0000502560&office_id=374&code=028050&page=1&sm=" target="_blank">삼성E&A 중동 위험수당 더 준다…삼성물산은?</a><span class="news-date">2026.04.06 15:25</span></div><div class="news-item"><span class="news-tag">삼성E&A</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0000140186&office_id=658&code=028050&page=1&sm=" target="_blank">삼성전자 국내 1000대 상장사 매출 비중 11.4%…SK하이닉스 매출...</a><span class="news-date">2026.04.06 14:02</span></div><div class="news-item"><span class="news-tag">롯데에너지머티리얼즈</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0004607541&office_id=011&code=020150&page=1&sm=" target="_blank">“이번엔 진짜 바닥 지나나”...2차전지株 동반 상승 [줍줍리포트]</a><span class="news-date">2026.04.06 14:19</span></div><div class="news-item"><span class="news-tag">롯데에너지머티리얼즈</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0008871898&office_id=421&code=020150&page=1&sm=" target="_blank">'실적개선 기대감' 이차전지주 동반 강세 [핫종목]</a><span class="news-date">2026.04.06 10:25</span></div><div class="news-item"><span class="news-tag">후성</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003632748&office_id=081&code=093370&page=1&sm=" target="_blank">[서울데이터랩]금일 코스피 거래량 1위 남선알미늄 거래대금 무려 3,1...</a><span class="news-date">2026.04.06 13:39</span></div><div class="news-item"><span class="news-tag">후성</span><a href="https://finance.naver.com/item/news_read.naver?article_id=0003632654&office_id=081&code=093370&page=1&sm=" target="_blank">[서울데이터랩]‘풍산홀딩스’ 29.99% 상한가…실시간 상승률 1위</a><span class="news-date">2026.04.06 09:27</span></div></div>
     </div>
     <div class="card">
-      <div class="card-header"><span>🌐</span><h2>주요 경제 뉴스</h2></div>
-      <div class="news-scroll"><div class="news-item"><a href="https://finance.naver.com/news/news_read.naver?article_id=0005502518&office_id=014&mode=LSS2D&type=0§ion_id=101§ion_id2=258§ion_id3=&date=20260405&page=1" target="_blank">일희일비 장세...'5000~5700' 박스피 이어질 것 [주간 증시 전망]</a></div><div class="news-item"><a href="https://finance.naver.com/news/news_read.naver?article_id=0005502517&office_id=014&mode=LSS2D&type=0§ion_id=101§ion_id2=258§ion_id3=&date=20260405&page=1" target="_blank">돈 몰린 곳 따로 있었다…'원유·방산 ETF' 줄줄이 강세 [ETF 스퀘어]</a></div><div class="news-item"><a href="https://finance.naver.com/news/news_read.naver?article_id=0006250436&office_id=018&mode=LSS2D&type=0§ion_id=101§ion_id2=258§ion_id3=&date=20260405&page=1" target="_blank">삼전·하닉 10%씩 오르고 내리는데…레버리지 ETF 역풍 맞나</a></div><div class="news-item"><a href="https://finance.naver.com/news/news_read.naver?article_id=0006250432&office_id=018&mode=LSS2D&type=0§ion_id=101§ion_id2=258§ion_id3=&date=20260405&page=1" target="_blank">전쟁 한달, ETN 수익률 갈랐다…원유 웃고 금·은 울고</a></div><div class="news-item"><a href="https://finance.naver.com/news/news_read.naver?article_id=0002223334&office_id=138&mode=LSS2D&type=0§ion_id=101§ion_id2=258§ion_id3=&date=20260405&page=1" target="_blank">한화솔루션, 2.4조 유증 강행에 주주 반발 확산…금감원 해명 논란까지</a></div><div class="news-item"><a href="https://finance.naver.com/news/news_read.naver?article_id=0005745122&office_id=277&mode=LSS2D&type=0§ion_id=101§ion_id2=258§ion_id3=&date=20260405&page=1" target="_blank">떠났던 외국인, 다시 돌아오나…삼전·닉스 '줍줍'하며 순매수 전환</a></div><div class="news-item"><a href="https://finance.naver.com/news/news_read.naver?article_id=0000045986&office_id=648&mode=LSS2D&type=0§ion_id=101§ion_id2=258§ion_id3=&date=20260405&page=1" target="_blank">부동산PF 익스포져 1년새 30조 줄었다...정부, 건전성 관리 지속</a></div><div class="news-item"><a href="https://finance.naver.com/news/news_read.naver?article_id=0000923610&office_id=469&mode=LSS2D&type=0§ion_id=101§ion_id2=258§ion_id3=&date=20260405&page=1" target="_blank">우리은행, 두산과 맞손… '미래전략산업 금융지원' 업무협약</a></div></div>
+      <div class="card-header"><span>🌐</span><h2>주요 경제 뉴스</h2><span class="live-badge">매시간 업데이트</span></div>
+      <div class="news-scroll"><div class="news-item"><a href="https://finance.naver.com/news/news_read.naver?article_id=0008873246&office_id=421&mode=LSS2D&type=0§ion_id=101§ion_id2=258§ion_id3=&date=20260406&page=1" target="_blank">코스피, 삼성전자 실적발표 기대 속 상승마감</a></div><div class="news-item"><a href="https://finance.naver.com/news/news_read.naver?article_id=0006251334&office_id=018&mode=LSS2D&type=0§ion_id=101§ion_id2=258§ion_id3=&date=20260406&page=1" target="_blank">[포토]'삼성전자 실적 D-1' 코스피, 1%대 올라 5,450 마감…코스닥은 내려</a></div><div class="news-item"><a href="https://finance.naver.com/news/news_read.naver?article_id=0006251332&office_id=018&mode=LSS2D&type=0§ion_id=101§ion_id2=258§ion_id3=&date=20260406&page=1" target="_blank">[포토]삼성전자 실적 기대감에…코스피 상승 마감</a></div><div class="news-item"><a href="https://finance.naver.com/news/news_read.naver?article_id=0016005519&office_id=001&mode=LSS2D&type=0§ion_id=101§ion_id2=258§ion_id3=&date=20260406&page=1" target="_blank">카드·캐피탈사, 두 달간 주유·교통비 추가할인…혜택 소급적용</a></div><div class="news-item"><a href="https://finance.naver.com/news/news_read.naver?article_id=0013870593&office_id=003&mode=LSS2D&type=0§ion_id=101§ion_id2=258§ion_id3=&date=20260406&page=1" target="_blank">삼성전자 실적 발표 앞두고 상승 마감</a></div><div class="news-item"><a href="https://finance.naver.com/news/news_read.naver?article_id=0013870592&office_id=003&mode=LSS2D&type=0§ion_id=101§ion_id2=258§ion_id3=&date=20260406&page=1" target="_blank">'확전 불안' 속 코스피 상승 마감</a></div><div class="news-item"><a href="https://finance.naver.com/news/news_read.naver?article_id=0013870591&office_id=003&mode=LSS2D&type=0§ion_id=101§ion_id2=258§ion_id3=&date=20260406&page=1" target="_blank">'확전 불안' 속 오늘 증시는?</a></div><div class="news-item"><a href="https://finance.naver.com/news/news_read.naver?article_id=0013870590&office_id=003&mode=LSS2D&type=0§ion_id=101§ion_id2=258§ion_id3=&date=20260406&page=1" target="_blank">'확전 불안' 속 오늘 증시는?</a></div></div>
     </div>
   </div>
 </div>
 <footer>
-  ※ 투자 판단의 책임은 본인에게 있습니다. | 데이터 기준일: 2026년 04월 03일 (금) | <a href="https://finance.naver.com" target="_blank">네이버 금융</a>
+  ※ 투자 판단의 책임은 본인에게 있습니다. | 데이터 기준일: 2026년 04월 06일 (월) | <a href="https://finance.naver.com" target="_blank">네이버 금융</a>
 </footer>
 </body>
 </html>
