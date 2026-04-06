@@ -97,36 +97,74 @@ def get_stock_news(code, name, max_items=2):
         for row in soup.select('table.type5 tr'):
             a = row.find('a')
             td_date = row.find('td', class_='date')
-            if a and td_date:
+            if a and td_date and a.get('href'):
                 title = a.text.strip()
-                href = 'https://finance.naver.com' + a['href'] if a['href'].startswith('/') else a['href']
+                href = a['href']
+                # 절대경로로 변환
+                if href.startswith('http'):
+                    url = href
+                elif href.startswith('/'):
+                    url = 'https://finance.naver.com' + href
+                else:
+                    continue
                 if title:
-                    news_list.append({'title': title, 'url': href, 'date': td_date.text.strip(), 'stock': name})
+                    news_list.append({'title': title, 'url': url, 'date': td_date.text.strip(), 'stock': name})
             if len(news_list) >= max_items: break
         return news_list
     except: return []
 
 def get_economy_news(max_items=8):
     try:
-        r = requests.get("https://finance.naver.com/news/news_list.naver?mode=LSS2D&section_id=101&section_id2=258", headers=headers, timeout=5)
+        r = requests.get("https://finance.naver.com/news/mainnews.naver", headers=headers, timeout=5)
         soup = BeautifulSoup(r.text, 'html.parser')
         news_list = []
-        for a in soup.select('dd.articleSubject a'):
+        for a in soup.select('ul.newsList li a'):
             title = a.text.strip()
-            href = 'https://finance.naver.com' + a['href'] if a['href'].startswith('/') else a['href']
-            if title: news_list.append({'title': title, 'url': href})
+            href = a.get('href','')
+            if not title or not href: continue
+            if href.startswith('http'):
+                url = href
+            elif href.startswith('/'):
+                url = 'https://finance.naver.com' + href
+            else:
+                continue
+            news_list.append({'title': title, 'url': url})
             if len(news_list) >= max_items: break
+        # 못 가져오면 다른 방법 시도
+        if not news_list:
+            r2 = requests.get("https://finance.naver.com/news/news_list.naver?mode=LSS2D&section_id=101&section_id2=258", headers=headers, timeout=5)
+            soup2 = BeautifulSoup(r2.text, 'html.parser')
+            for a in soup2.select('dd.articleSubject a'):
+                title = a.text.strip()
+                href = a.get('href','')
+                if not title or not href: continue
+                if href.startswith('http'):
+                    url = href
+                elif href.startswith('/'):
+                    url = 'https://finance.naver.com' + href
+                else:
+                    continue
+                news_list.append({'title': title, 'url': url})
+                if len(news_list) >= max_items: break
         return news_list
     except: return []
 
-# 항상 전부 수집
+# 수집
 kospi = fetch_stocks('0', 'KOSPI', 10)
 kosdaq = fetch_stocks('1', 'KOSDAQ', 10)
 
+# 상한가 종목만 뉴스 수집 (코스피 + 코스닥 합산)
+upper_stocks = [s for s in kospi + kosdaq if s['is_upper']]
+# 상한가 없으면 상위 5개로 대체
+news_targets = upper_stocks if upper_stocks else (kospi + kosdaq)[:5]
+print(f"뉴스 수집 대상: {[s['name'] for s in news_targets]}")
+
 stock_news = []
-for s in (kospi + kosdaq)[:10]:
+for s in news_targets:
     stock_news.extend(get_stock_news(s['code'], s['name'], 2))
+
 eco_news = get_economy_news(8)
+print(f"종목뉴스 {len(stock_news)}개, 경제뉴스 {len(eco_news)}개")
 
 stock_news_html = "".join([
     f'<div class="news-item"><span class="news-tag">{n["stock"]}</span><a href="{n["url"]}" target="_blank">{n["title"]}</a><span class="news-date">{n["date"]}</span></div>'
@@ -213,7 +251,7 @@ html = f"""<!DOCTYPE html>
   </div>
   <div class="news-panel">
     <div class="card">
-      <div class="card-header"><span>📰</span><h2>급등 종목 관련 뉴스</h2></div>
+      <div class="card-header"><span>📰</span><h2>상한가 종목 관련 뉴스</h2></div>
       <div class="news-scroll">{stock_news_html}</div>
     </div>
     <div class="card">
